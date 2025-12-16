@@ -34,13 +34,24 @@ export function generateOperationNumber(lastNumber?: string): string {
 /**
  * Format date to Spanish locale
  */
+/**
+ * Format date to Spanish locale safely
+ */
 export function formatDate(date: Date | string): string {
-    const d = typeof date === 'string' ? new Date(date) : date
-    return d.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    })
+    try {
+        if (!date) return '-'
+        const d = typeof date === 'string' ? new Date(date) : date
+        // Check for invalid date
+        if (isNaN(d.getTime())) return '-'
+
+        return d.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+    } catch (error) {
+        return '-'
+    }
 }
 
 /**

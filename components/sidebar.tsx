@@ -94,7 +94,7 @@ export default function Sidebar() {
                     </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                    Actualizado: {mounted ? new Date().toLocaleDateString('es-ES') : '...'}
+                    Gestión SAT
                 </p>
             </div>
         </div>
