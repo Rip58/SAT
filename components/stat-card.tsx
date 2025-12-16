@@ -16,7 +16,7 @@ export default function StatCard({
     iconColor = 'text-primary',
 }: StatCardProps) {
     return (
-        <div className="rounded-lg border border-border bg-secondary p-6">
+        <div className="rounded-lg border border-border bg-secondary p-6 h-full flex flex-col justify-between">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-sm font-medium text-muted-foreground">{title}</p>

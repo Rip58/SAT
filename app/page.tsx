@@ -127,7 +127,7 @@ export default function Dashboard() {
 
             {/* Stats Grid - Clickable Filters */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-                <div onClick={() => setFilter('all')} className={`cursor-pointer transition-transform hover:scale-105 ${filter === 'all' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
+                <div onClick={() => setFilter('all')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'all' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Total Reparaciones"
                         value={stats.total}
@@ -135,7 +135,7 @@ export default function Dashboard() {
                         icon={Package}
                     />
                 </div>
-                <div onClick={() => setFilter('PENDING')} className={`cursor-pointer transition-transform hover:scale-105 ${filter === 'PENDING' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
+                <div onClick={() => setFilter('PENDING')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'PENDING' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Pendientes"
                         value={stats.pending}
@@ -144,7 +144,7 @@ export default function Dashboard() {
                         iconColor="text-gray-400"
                     />
                 </div>
-                <div onClick={() => setFilter('IN_PROGRESS')} className={`cursor-pointer transition-transform hover:scale-105 ${filter === 'IN_PROGRESS' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
+                <div onClick={() => setFilter('IN_PROGRESS')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'IN_PROGRESS' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="En Progreso"
                         value={stats.inProgress}
@@ -153,7 +153,7 @@ export default function Dashboard() {
                         iconColor="text-yellow-400"
                     />
                 </div>
-                <div onClick={() => setFilter('COMPLETED')} className={`cursor-pointer transition-transform hover:scale-105 ${filter === 'COMPLETED' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
+                <div onClick={() => setFilter('COMPLETED')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'COMPLETED' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Completadas"
                         value={stats.completed}
