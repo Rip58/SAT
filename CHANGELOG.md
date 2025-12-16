@@ -5,6 +5,12 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [0.1.12] - 2025-12-16
+
+### Corregido
+- **Web Crash**: Solucionado error crítico "Application error" por hidratación en Sidebar y datos indefinidos en Dashboard.
+- **Estabilidad**: Mejorada la comprobación de estado de la base de datos.
+
 ## [0.1.11] - 2025-12-16
 
 ### Añadido
