@@ -51,36 +51,38 @@ export async function GET(
     
     body {
       font-family: Arial, sans-serif;
-      padding: 40px;
+      padding: 20px 40px;
       color: #333;
-      line-height: 1.4;
-      font-size: 14px;
+      line-height: 1.3;
+      font-size: 11px;
       max-width: 210mm; /* A4 width */
       margin: 0 auto;
     }
     
     .header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
     }
     
     .header h1 {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
       margin-bottom: 5px;
       color: #000;
     }
     
     .header p {
-      font-size: 14px;
+      font-size: 12px;
       color: #666;
     }
     
     .grid-container {
       display: flex;
       justify-content: space-between;
-      gap: 40px;
-      margin-bottom: 30px;
+      gap: 30px;
+      margin-bottom: 20px;
     }
     
     .column {
@@ -88,14 +90,16 @@ export async function GET(
     }
     
     h3 {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: bold;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
       color: #000;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 3px;
     }
     
     .info-row {
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     
     .label {
@@ -104,37 +108,40 @@ export async function GET(
     }
     
     .section {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     
     .description {
       background-color: #f9f9f9;
-      padding: 15px;
-      border-radius: 5px;
-      min-height: 80px;
+      padding: 10px;
+      border-radius: 4px;
+      min-height: 60px;
+      font-size: 11px;
     }
     
     .conditions {
-      margin-top: 40px;
-      font-size: 10px;
+      margin-top: 20px;
+      font-size: 9px;
       text-align: justify;
-      color: #555;
+      color: #666;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
     }
     
     .conditions h4 {
       text-align: center;
-      font-size: 12px;
-      margin-bottom: 10px;
+      font-size: 10px;
+      margin-bottom: 5px;
       text-transform: uppercase;
     }
 
     .conditions p {
-      margin-bottom: 8px;
-      line-height: 1.3;
+      margin-bottom: 4px;
+      line-height: 1.2;
     }
     
     .signatures {
-      margin-top: 60px;
+      margin-top: 30px;
       display: flex;
       justify-content: space-between;
       gap: 40px;
@@ -144,29 +151,34 @@ export async function GET(
       flex: 1;
       text-align: center;
       border-top: 1px solid #ccc;
-      padding-top: 10px;
+      padding-top: 5px;
     }
     
     .signature-title {
       font-weight: bold;
-      font-size: 12px;
-      margin-bottom: 40px;
+      font-size: 10px;
+      margin-bottom: 30px;
       text-transform: uppercase;
     }
 
     .signature-name {
-        margin-top: 40px;
+        margin-top: 5px;
         font-weight: bold;
+        font-size: 11px;
     }
 
     .signature-date {
-        font-size: 12px;
+        font-size: 10px;
         color: #666;
     }
     
     @media print {
       body {
-        padding: 0;
+        padding: 0 10px;
+      }
+      .description {
+        background-color: #fff; /* Save ink */
+        border: 1px solid #eee;
       }
     }
   </style>
@@ -219,17 +231,17 @@ export async function GET(
     <p>Al firmar este documento, el cliente acepta las condiciones del servicio descritas anteriormente.</p>
   </div>
   
-  <div class="signatures">
+    <div class="signatures">
     <div class="signature-box" style="border-top: none;">
       <div class="signature-title">FIRMA DEL CLIENTE</div>
-      <div style="height: 60px; border-bottom: 1px solid #ccc; margin-bottom: 5px;"></div>
+      <div style="height: 40px; border-bottom: 1px solid #ccc; margin-bottom: 5px;"></div>
       <div class="signature-name">${repair.customerName} ${repair.customerSurname}</div>
       <div class="signature-date">Fecha: ${formatDate(new Date())}</div>
     </div>
     
     <div class="signature-box" style="border-top: none;">
       <div class="signature-title">FIRMA DE LA EMPRESA</div>
-      <div style="height: 60px; border-bottom: 1px solid #ccc; margin-bottom: 5px;"></div>
+      <div style="height: 40px; border-bottom: 1px solid #ccc; margin-bottom: 5px;"></div>
       <div class="signature-name">${technicianName === '-' ? 'SAT' : technicianName}</div>
       <div class="signature-date">Fecha: ${formatDate(new Date())}</div>
     </div>
