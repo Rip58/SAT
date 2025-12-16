@@ -184,77 +184,77 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            {/* Security Settings */}
-            <div className="max-w-2xl rounded-lg border border-border bg-secondary p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-2">Seguridad</h2>
-                <p className="text-sm text-muted-foreground mb-6">
-                    Configura el PIN maestro para acciones sensibles (como eliminar registros)
-                </p>
+            <div className="grid gap-6 lg:grid-cols-2 max-w-5xl">
+                {/* Security Settings */}
+                <div className="rounded-lg border border-border bg-secondary p-6">
+                    <h2 className="text-xl font-semibold mb-2">Seguridad</h2>
+                    <p className="text-sm text-muted-foreground mb-6">
+                        PIN maestro para acciones sensibles
+                    </p>
 
-                <div className="flex items-end gap-4">
-                    <div className="flex-1">
-                        <label className="block text-sm font-medium mb-2">PIN Maestro</label>
+                    <div className="flex items-end gap-4">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium mb-2">PIN Maestro</label>
+                            <input
+                                type="text"
+                                value={securityPin}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, '').slice(0, 4)
+                                    setSecurityPin(val)
+                                }}
+                                placeholder="0000"
+                                className="input w-full font-mono tracking-widest text-center text-lg"
+                            />
+                        </div>
+                        <button
+                            onClick={handleSavePin}
+                            disabled={savingPin || securityPin.length < 4}
+                            className="button-primary mb-[2px]"
+                        >
+                            <Lock className="h-4 w-4 mr-2" />
+                            Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                {/* Technicians Management */}
+                <div className="rounded-lg border border-border bg-secondary p-6">
+                    <div className="flex items-center justify-between mb-2">
+                        <h2 className="text-xl font-semibold">Técnicos</h2>
+                        <span className="text-xs text-muted-foreground bg-accent px-2 py-1 rounded-full">{technicians.length}</span>
+                    </div>
+
+                    <form onSubmit={handleAddTechnician} className="flex gap-2 mb-4">
                         <input
                             type="text"
-                            value={securityPin}
-                            onChange={(e) => {
-                                const val = e.target.value.replace(/\D/g, '').slice(0, 4)
-                                setSecurityPin(val)
-                            }}
-                            placeholder="0000"
-                            className="input w-full font-mono tracking-widest"
+                            value={newTechName}
+                            onChange={(e) => setNewTechName(e.target.value)}
+                            placeholder="Nuevo técnico..."
+                            className="input flex-1"
                         />
+                        <button type="submit" className="button-primary px-3">
+                            <Plus className="h-4 w-4" />
+                        </button>
+                    </form>
+
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                        {technicians.length === 0 && (
+                            <p className="text-sm text-muted-foreground text-center py-4">
+                                No hay técnicos
+                            </p>
+                        )}
+                        {technicians.map((tech) => (
+                            <div key={tech.id} className="flex items-center justify-between p-2 rounded-lg border border-border bg-accent text-sm">
+                                <span className="font-medium">{tech.name}</span>
+                                <button
+                                    onClick={() => handleDeleteTechnician(tech.id)}
+                                    className="text-destructive hover:bg-destructive/10 p-1.5 rounded-md transition-colors"
+                                >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
+                        ))}
                     </div>
-                    <button
-                        onClick={handleSavePin}
-                        disabled={savingPin || securityPin.length < 4}
-                        className="button-primary mb-[2px]"
-                    >
-                        <Lock className="h-4 w-4 mr-2" />
-                        {savingPin ? 'Guardando...' : 'Actualizar PIN'}
-                    </button>
-                </div>
-            </div>
-
-            {/* Technicians Management */}
-            <div className="max-w-2xl rounded-lg border border-border bg-secondary p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-2">Gestión de Técnicos</h2>
-                <p className="text-sm text-muted-foreground mb-6">
-                    Añade o elimina técnicos del servicio
-                </p>
-
-                <form onSubmit={handleAddTechnician} className="flex gap-2 mb-6">
-                    <input
-                        type="text"
-                        value={newTechName}
-                        onChange={(e) => setNewTechName(e.target.value)}
-                        placeholder="Nombre del técnico"
-                        className="input flex-1"
-                    />
-                    <button type="submit" className="button-primary whitespace-nowrap">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Añadir
-                    </button>
-                </form>
-
-                <div className="space-y-2">
-                    {technicians.length === 0 && (
-                        <p className="text-sm text-muted-foreground text-center py-4">
-                            No hay técnicos registrados
-                        </p>
-                    )}
-                    {technicians.map((tech) => (
-                        <div key={tech.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-accent">
-                            <span className="font-medium">{tech.name}</span>
-                            <button
-                                onClick={() => handleDeleteTechnician(tech.id)}
-                                className="text-destructive hover:bg-destructive/10 p-2 rounded-md transition-colors"
-                                title="Eliminar técnico"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </button>
-                        </div>
-                    ))}
                 </div>
             </div>
 

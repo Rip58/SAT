@@ -299,8 +299,20 @@ export default function NewRepairPage() {
 
                     <div className="space-y-6">
                         <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <label className="block text-sm font-medium">Número de factura</label>
+                            <label className="block text-sm font-medium mb-2">Número de factura</label>
+                            <div className="flex items-center gap-4">
+                                {hasInvoice ? (
+                                    <input
+                                        type="text"
+                                        value={formData.invoiceNumber}
+                                        onChange={(e) => setFormData({ ...formData, invoiceNumber: e.target.value })}
+                                        className="input max-w-[200px]"
+                                    />
+                                ) : (
+                                    <div className="input bg-accent text-muted-foreground opacity-50 cursor-not-allowed max-w-[200px]">
+                                        No aplica
+                                    </div>
+                                )}
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="checkbox"
@@ -316,23 +328,11 @@ export default function NewRepairPage() {
                                         }}
                                         className="h-4 w-4 rounded border-input bg-secondary text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                                     />
-                                    <label htmlFor="noInvoice" className="text-xs text-muted-foreground cursor-pointer">
+                                    <label htmlFor="noInvoice" className="text-sm font-medium cursor-pointer">
                                         Sin factura
                                     </label>
                                 </div>
                             </div>
-                            {hasInvoice ? (
-                                <input
-                                    type="text"
-                                    value={formData.invoiceNumber}
-                                    onChange={(e) => setFormData({ ...formData, invoiceNumber: e.target.value })}
-                                    className="input"
-                                />
-                            ) : (
-                                <div className="input bg-accent text-muted-foreground opacity-50 cursor-not-allowed">
-                                    No aplica
-                                </div>
-                            )}
                         </div>
 
                         <div>
