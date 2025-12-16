@@ -1,10 +1,18 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { APP_VERSION } from '@/lib/constants'
+import { initializeDatabase } from '@/lib/init-db'
 
-// GET /api/health - Check database connection
+let dbInitialized = false
+
+// GET /api/health - Check database connection and initialize if needed
 export async function GET() {
     try {
+        // Initialize database schema on first run
+        if (!dbInitialized) {
+            dbInitialized = await initializeDatabase()
+        }
+
         // Try to run a simple query
         await prisma.$queryRaw`SELECT 1`
 
