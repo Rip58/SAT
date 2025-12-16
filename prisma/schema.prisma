@@ -42,7 +42,7 @@ model Repair {
   repairResult    String? @db.Text // Final result
   
   // Images
-  imageUrls       String[] // Array of Vercel Blob URLs
+  imageUrls       Json     @default("[]") // Array of Vercel Blob URLs
   
   // Metadata
   createdAt       DateTime @default(now())
