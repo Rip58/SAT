@@ -5,6 +5,12 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [0.1.13] - 2025-12-16
+
+### Corregido
+- **Despliegue**: Eliminado modo `standalone` en `next.config.js` para resolver error 500 en carga de chunks estáticos (ChunkLoadError).
+- **Hardening**: Refuerzo de configuración de build para entornos Hostinger/VPS.
+
 ## [0.1.12] - 2025-12-16
 
 ### Corregido
