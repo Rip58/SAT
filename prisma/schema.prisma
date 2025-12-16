@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Repair {
+  id              String   @id @default(cuid())
+  operationNumber String   @unique // REP-2025-001
+  
+  // Dates
+  entryDate       DateTime @default(now())
+  exitDate        DateTime?
+  
+  // Status
+  status          RepairStatus @default(PENDING)
+  
+  // Customer Information (only phone and email are required)
+  customerName    String?
+  customerSurname String?
+  customerPhone   String   // Required
+  customerEmail   String   // Required
+  hasWhatsApp     Boolean  @default(false)
+  
+  // Device Information
+  brand           String?
+  model           String?
+  serialNumber    String?
+  assignedTechnicianId String?
+  assignedTechnician   Technician? @relation(fields: [assignedTechnicianId], references: [id])
+  
+  // Repair Details
+  invoiceNumber   String?
+  issueDescription String? @db.Text // Customer's problem report
+  technicalDiagnosis String? @db.Text // Technical assessment
+  repairResult    String? @db.Text // Final result
+  
+  // Images
+  imageUrls       String[] // Array of Vercel Blob URLs
+  
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([operationNumber])
+  @@index([customerPhone])
+  @@index([customerEmail])
+}
+
+enum RepairStatus {
+  PENDING      // Pendiente
+  IN_PROGRESS  // En Progreso
+  COMPLETED    // Completada
+  CANCELLED    // Cancelada
+}
+
+model Technician {
+  id        String   @id @default(cuid())
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  repairs   Repair[]
+}
+
+model Settings {
+  id              String   @id @default("settings")
+  passwordHash    String?  // For simple admin password
+  companyName     String   @default("Gestor de SAT")
+  companyAddress  String?
+  companyPhone    String?
+  companyEmail    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
