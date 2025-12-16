@@ -142,11 +142,12 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-3">
-                {/* LEFT COLUMN: Metadata & Entities */}
-                <div className="space-y-6 lg:col-span-1">
-                    {/* Operation Info Card */}
-                    <div className="rounded-lg border border-border bg-secondary p-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                {/* --- Top Row: Entities (3 Columns) --- */}
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+                    {/* 1. Operation Info Card */}
+                    <div className="rounded-lg border border-border bg-secondary p-5 h-full">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="font-semibold flex items-center gap-2">
                                 <RefreshCw className="h-4 w-4 text-primary" />
@@ -195,8 +196,8 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                         </div>
                     </div>
 
-                    {/* Customer Info Card */}
-                    <div className="rounded-lg border border-border bg-secondary p-5">
+                    {/* 2. Customer Info Card */}
+                    <div className="rounded-lg border border-border bg-secondary p-5 h-full">
                         <h2 className="font-semibold mb-4">Cliente</h2>
                         <div className="space-y-3">
                             <div className="grid grid-cols-2 gap-3">
@@ -246,8 +247,8 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                         </div>
                     </div>
 
-                    {/* Device Info Card */}
-                    <div className="rounded-lg border border-border bg-secondary p-5">
+                    {/* 3. Device Info Card */}
+                    <div className="rounded-lg border border-border bg-secondary p-5 h-full">
                         <h2 className="font-semibold mb-4">Equipo</h2>
                         <div className="space-y-3">
                             <div className="grid grid-cols-2 gap-3">
@@ -289,8 +290,8 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN: Content & Details */}
-                <div className="space-y-6 lg:col-span-2">
+                {/* --- Bottom Section: Details & Images --- */}
+                <div className="space-y-6">
                     {/* Diagnosis & Details Card */}
                     <div className="rounded-lg border border-border bg-secondary p-6">
                         <div className="flex items-center justify-between mb-6">
@@ -376,7 +377,7 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                             onClick={() => window.open(`/api/repairs/${params.id}/pdf`, '_blank')}
                             className="button-ghost flex items-center gap-2"
                         >
-                            Generar PDF
+                            Generar PDF 📄
                         </button>
                         <button
                             type="button"
