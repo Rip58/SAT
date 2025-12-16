@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { localDb } from '@/lib/local-db'
+import prisma from '@/lib/prisma'
 import { formatDate, getStatusLabel } from '@/lib/utils'
 
 export async function GET(
@@ -7,8 +7,26 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const repair = await localDb.getRepairById(params.id)
-    const settings = await localDb.getSettings()
+    const repair = await prisma.repair.findUnique({
+      where: { id: params.id },
+      include: { assignedTechnician: true }
+    })
+
+    const settings = await prisma.settings.findUnique({
+      where: { id: 'settings' }
+    }) || {
+      serviceConditions: `CONDICIONES DEL SERVICIO
+
+Responsabilidad limitada: Nuestro servicio técnico no se hace responsable por pérdidas de datos, configuraciones personalizadas o software instalado en los equipos. Se recomienda realizar una copia de seguridad antes de cualquier intervención.
+
+Autorización de intervención: El cliente autoriza a los técnicos a realizar diagnósticos, reparaciones, formateos o instalaciones necesarias según el caso. En caso de que se requieran repuestos, se informará previamente al cliente para su aprobación.
+
+Garantía de servicio: La garantía cubre exclusivamente la reparación o repuesto realizado y no se extiende a otros componentes o fallos ajenos. El plazo de garantía será informado al cliente al momento de retirar el equipo.
+
+Equipos no retirados: Los equipos que no sean retirados en un plazo de 90 días desde la fecha de finalización del servicio, podrán ser considerados en abandono. Nos reservamos el derecho de disponer de ellos para cubrir los costes de diagnóstico o almacenaje.
+
+Datos personales: Toda la información contenida en los dispositivos será tratada con confidencialidad. No accedemos deliberadamente a archivos personales salvo autorización expresa del cliente y solo cuando sea necesario para el diagnóstico o solución del problema.`
+    }
 
     if (!repair) {
       return NextResponse.json(
@@ -17,15 +35,8 @@ export async function GET(
       )
     }
 
-    // Get technician info manually
-    let technicianName = '-'
-    if (repair.assignedTechnicianId) {
-      const technicians = await localDb.getTechnicians()
-      const tech = technicians.find(t => t.id === repair.assignedTechnicianId)
-      if (tech) {
-        technicianName = tech.name
-      }
-    }
+    // Get technician info from relation
+    const technicianName = repair.assignedTechnician?.name || '-'
 
     // Format Service Conditions for HTML (preserve line breaks)
     const formattedConditions = (settings?.serviceConditions || '')

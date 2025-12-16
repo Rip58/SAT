@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { localDb } from '@/lib/local-db'
+import prisma from '@/lib/prisma'
 import { repairSchema } from '@/lib/validations'
 import { generateOperationNumber } from '@/lib/utils'
 
@@ -10,36 +10,35 @@ export async function GET(request: NextRequest) {
         const status = searchParams.get('status')
         const search = searchParams.get('search')
 
-        let repairs = await localDb.getRepairs()
+        // Build where clause
+        const where: any = {}
 
-        // Filter by status
         if (status && status !== 'all') {
-            repairs = repairs.filter(r => r.status === status)
+            where.status = status
         }
 
-        // Filter by search term
         if (search) {
             const lowerSearch = search.toLowerCase()
-            repairs = repairs.filter(r =>
-                (r.customerName?.toLowerCase().includes(lowerSearch) || false) ||
-                (r.customerSurname?.toLowerCase().includes(lowerSearch) || false) ||
-                r.customerPhone.includes(search) ||
-                r.customerEmail.toLowerCase().includes(lowerSearch) ||
-                r.operationNumber.toLowerCase().includes(lowerSearch)
-            )
+            where.OR = [
+                { customerName: { contains: lowerSearch } },
+                { customerSurname: { contains: lowerSearch } },
+                { customerPhone: { contains: search } },
+                { customerEmail: { contains: lowerSearch } },
+                { operationNumber: { contains: lowerSearch } },
+            ]
         }
 
-        // Sort by createdAt desc
-        repairs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        const repairs = await prisma.repair.findMany({
+            where,
+            include: {
+                assignedTechnician: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
 
-        // Get technicians to populate assignedTechnician (simulate include)
-        const technicians = await localDb.getTechnicians()
-        const repairsWithTech = repairs.map(r => ({
-            ...r,
-            assignedTechnician: technicians.find(t => t.id === r.assignedTechnicianId) || null
-        }))
-
-        return NextResponse.json(repairsWithTech)
+        return NextResponse.json(repairs)
     } catch (error) {
         console.error('Error fetching repairs:', error)
         return NextResponse.json(
@@ -58,35 +57,37 @@ export async function POST(request: NextRequest) {
         const validatedData = repairSchema.parse(body)
 
         // Generate operation number
-        const repairs = await localDb.getRepairs()
-        // Sort by operation number desc to find last
-        const sortedRepairs = [...repairs].sort((a, b) =>
-            b.operationNumber.localeCompare(a.operationNumber)
-        )
-        const lastRepair = sortedRepairs[0]
+        // Find last repair by operation number to increment
+        const lastRepair = await prisma.repair.findFirst({
+            orderBy: {
+                operationNumber: 'desc'
+            }
+        })
 
         const operationNumber = generateOperationNumber(lastRepair?.operationNumber)
 
         // Create repair
-        const newRepair = await localDb.createRepair({
-            operationNumber,
-            customerPhone: validatedData.customerPhone,
-            customerEmail: validatedData.customerEmail,
-            customerName: validatedData.customerName || null,
-            customerSurname: validatedData.customerSurname || null,
-            hasWhatsApp: validatedData.hasWhatsApp,
-            brand: validatedData.brand || null,
-            model: validatedData.model || null,
-            serialNumber: validatedData.serialNumber || null,
-            assignedTechnicianId: validatedData.assignedTechnicianId || null,
-            invoiceNumber: validatedData.invoiceNumber || null,
-            issueDescription: validatedData.issueDescription || null,
-            technicalDiagnosis: validatedData.technicalDiagnosis || null,
-            repairResult: validatedData.repairResult || null,
-            status: validatedData.status,
-            entryDate: validatedData.entryDate ? new Date(validatedData.entryDate) : new Date(),
-            exitDate: validatedData.exitDate ? new Date(validatedData.exitDate) : null,
-            imageUrls: validatedData.imageUrls,
+        const newRepair = await prisma.repair.create({
+            data: {
+                operationNumber,
+                customerPhone: validatedData.customerPhone,
+                customerEmail: validatedData.customerEmail,
+                customerName: validatedData.customerName || null,
+                customerSurname: validatedData.customerSurname || null,
+                hasWhatsApp: validatedData.hasWhatsApp,
+                brand: validatedData.brand || null,
+                model: validatedData.model || null,
+                serialNumber: validatedData.serialNumber || null,
+                assignedTechnicianId: validatedData.assignedTechnicianId || null,
+                invoiceNumber: validatedData.invoiceNumber || null,
+                issueDescription: validatedData.issueDescription || null,
+                technicalDiagnosis: validatedData.technicalDiagnosis || null,
+                repairResult: validatedData.repairResult || null,
+                status: validatedData.status as any, // Cast to enum
+                entryDate: validatedData.entryDate ? new Date(validatedData.entryDate) : new Date(),
+                exitDate: validatedData.exitDate ? new Date(validatedData.exitDate) : null,
+                imageUrls: validatedData.imageUrls,
+            }
         })
 
         return NextResponse.json(newRepair, { status: 201 })

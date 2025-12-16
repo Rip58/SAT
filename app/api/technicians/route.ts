@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { localDb } from '@/lib/local-db'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 // Basic schema for validation
@@ -10,13 +10,16 @@ const technicianSchema = z.object({
 // GET /api/technicians - List all technicians
 export async function GET() {
     try {
-        const technicians = await localDb.getTechnicians()
-        // Filter active and sort
-        const activeTechnicians = technicians
-            .filter(t => t.isActive)
-            .sort((a, b) => a.name.localeCompare(b.name))
+        const technicians = await prisma.technician.findMany({
+            where: {
+                isActive: true
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        })
 
-        return NextResponse.json(activeTechnicians)
+        return NextResponse.json(technicians)
     } catch (error) {
         console.error('Error fetching technicians:', error)
         return NextResponse.json(
@@ -32,7 +35,11 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         const validated = technicianSchema.parse(body)
 
-        const newTechnician = await localDb.createTechnician(validated.name)
+        const newTechnician = await prisma.technician.create({
+            data: {
+                name: validated.name
+            }
+        })
 
         return NextResponse.json(newTechnician, { status: 201 })
     } catch (error: any) {
@@ -63,7 +70,19 @@ export async function DELETE(request: NextRequest) {
             )
         }
 
-        await localDb.deleteTechnician(id)
+        // Soft delete or hard delete? Schema has isActive.
+        // Let's hard delete for now to match localDb behavior, OR strictly follow schema which defaults isActive=true
+        // Actually, let's just delete the record. If there are relations, it might fail.
+        // Assuming cascade or we just want to remove it.
+        // But localDb implementation used splice, which is a hard delete.
+
+        // However, if there are repairs assigned, Prisma might throw error if foreign key constraint exists.
+        // The schema: assignedTechnician Technician? @relation(...)
+        // The relation is optional on Repair side.
+
+        await prisma.technician.delete({
+            where: { id }
+        })
 
         return NextResponse.json({ success: true })
     } catch (error) {
