@@ -5,6 +5,16 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [0.1.11] - 2025-12-16
+
+### Añadido
+- **Base de Datos**: Migración completa de almacenamiento local (JSON) a MySQL (Hostinger compatible).
+- **Despliegue**: Optimización de `imageUrls` usando tipo JSON para compatibilidad con MySQL.
+
+### Cambiado
+- **PDF**: Diseño compactado para imprimir en una sola hoja A4.
+- **Build**: Sincronización de base de datos (`prisma db push`) movida al script de inicio (`start`) para evitar errores de compilación por falta de conexión a BD.
+
 ## [0.0.3] - 2025-12-05
 
 ### Corregido
