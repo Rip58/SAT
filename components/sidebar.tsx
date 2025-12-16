@@ -18,8 +18,10 @@ export default function Sidebar() {
     const pathname = usePathname()
     // Add state for DB health
     const [dbConnected, setDbConnected] = useState<boolean | null>(null)
+    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
+        setMounted(true)
         checkHealth()
         // Poll every 30 seconds
         const interval = setInterval(checkHealth, 30000)
@@ -39,6 +41,14 @@ export default function Sidebar() {
             setDbConnected(false)
         }
     }
+
+    // Determine status color/shadow
+    const statusColor = dbConnected === null ? 'bg-gray-400' :
+        dbConnected ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' :
+            'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]'
+
+    const statusText = dbConnected === null ? 'Conectando...' :
+        dbConnected ? 'Sistema Online' : 'Sin Conexión'
 
     return (
         <div className="flex h-screen w-64 flex-col bg-secondary border-r border-border">
@@ -78,17 +88,13 @@ export default function Sidebar() {
             {/* Footer */}
             <div className="border-t border-border p-4">
                 <div className="flex items-center gap-2 mb-2">
-                    <div className={`h-2 w-2 rounded-full ${dbConnected === null ? 'bg-gray-400' :
-                            dbConnected ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' :
-                                'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]'
-                        }`} />
+                    <div className={cn("h-2 w-2 rounded-full transition-all", statusColor)} />
                     <span className="text-xs font-medium text-muted-foreground">
-                        {dbConnected === null ? 'Conectando...' :
-                            dbConnected ? 'Sistema Online' : 'Sin Conexión'}
+                        {statusText}
                     </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                    Actualizado: {new Date().toLocaleDateString('es-ES')}
+                    Actualizado: {mounted ? new Date().toLocaleDateString('es-ES') : '...'}
                 </p>
             </div>
         </div>

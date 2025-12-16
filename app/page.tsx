@@ -130,7 +130,7 @@ export default function Dashboard() {
                 <div onClick={() => setFilter('all')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'all' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Total Reparaciones"
-                        value={stats.total}
+                        value={stats?.total || 0}
                         subtitle="Reparaciones registradas"
                         icon={Package}
                     />
@@ -138,7 +138,7 @@ export default function Dashboard() {
                 <div onClick={() => setFilter('PENDING')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'PENDING' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Pendientes"
-                        value={stats.pending}
+                        value={stats?.pending || 0}
                         subtitle="Reparaciones pendientes"
                         icon={Clock}
                         iconColor="text-gray-400"
@@ -147,7 +147,7 @@ export default function Dashboard() {
                 <div onClick={() => setFilter('IN_PROGRESS')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'IN_PROGRESS' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="En Progreso"
-                        value={stats.inProgress}
+                        value={stats?.inProgress || 0}
                         subtitle="Reparaciones en curso"
                         icon={Loader2}
                         iconColor="text-yellow-400"
@@ -156,7 +156,7 @@ export default function Dashboard() {
                 <div onClick={() => setFilter('COMPLETED')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'COMPLETED' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Completadas"
-                        value={stats.completed}
+                        value={stats?.completed || 0}
                         subtitle="Reparaciones finalizadas"
                         icon={CheckCircle2}
                         iconColor="text-blue-400"
