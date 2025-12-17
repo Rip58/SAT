@@ -86,16 +86,19 @@ export default function Sidebar() {
             </nav>
 
             {/* Footer */}
-            <div className="border-t border-border p-4">
-                <div className="flex items-center gap-2 mb-2">
-                    <div className={cn("h-2 w-2 rounded-full transition-all", statusColor)} />
-                    <span className="text-xs font-medium text-muted-foreground">
-                        {statusText}
-                    </span>
+            <div className="mt-auto border-t border-gray-200 p-4 space-y-2">
+                {/* DB Status Indicator - Only show after mount */}
+                {mounted && (
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <div className={cn("w-2 h-2 rounded-full transition-all", statusColor)} />
+                        <span>{statusText}</span>
+                    </div>
+                )}
+
+                {/* Version - Static, no hydration issue */}
+                <div className="text-xs text-gray-500">
+                    Versión {APP_VERSION}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                    Gestión SAT
-                </p>
             </div>
         </div>
     )

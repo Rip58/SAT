@@ -6,9 +6,12 @@ import { generateOperationNumber } from '@/lib/utils'
 // GET /api/repairs - List all repairs with optional status filter
 export async function GET(request: NextRequest) {
     try {
+        console.log('🔧 Repairs API called')
         const searchParams = request.nextUrl.searchParams
         const status = searchParams.get('status')
         const search = searchParams.get('search')
+
+        console.log('🔧 Filters:', { status, search })
 
         // Build where clause
         const where: any = {}
@@ -28,6 +31,8 @@ export async function GET(request: NextRequest) {
             ]
         }
 
+        console.log('🔧 Where clause:', JSON.stringify(where))
+
         const repairs = await prisma.repair.findMany({
             where,
             include: {
@@ -38,9 +43,11 @@ export async function GET(request: NextRequest) {
             }
         })
 
+        console.log('🔧 Found repairs:', repairs.length)
+
         return NextResponse.json(repairs)
     } catch (error) {
-        console.error('Error fetching repairs:', error)
+        console.error('❌ Error fetching repairs:', error)
         return NextResponse.json(
             { error: 'Error al obtener las reparaciones' },
             { status: 500 }

@@ -53,18 +53,26 @@ export default function Dashboard() {
 
     async function fetchData() {
         try {
+            console.log('🔍 Fetching dashboard data...')
             const [statsRes, repairsRes] = await Promise.all([
                 fetch('/api/stats'),
                 fetch('/api/repairs'), // Fetch all repairs for filtering
             ])
 
+            console.log('📊 Stats response status:', statsRes.status)
+            console.log('🔧 Repairs response status:', repairsRes.status)
+
             const statsData = await statsRes.json()
             const repairsData = await repairsRes.json()
+
+            console.log('📊 Stats data:', statsData)
+            console.log('🔧 Repairs data:', repairsData)
+            console.log('🔧 Number of repairs:', repairsData.length)
 
             setStats(statsData)
             setRepairs(repairsData)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('❌ Error fetching data:', error)
         } finally {
             setLoading(false)
         }
