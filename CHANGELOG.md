@@ -11,6 +11,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - **Despliegue**: Eliminado modo `standalone` en `next.config.js` para resolver error 500 en carga de chunks estáticos (ChunkLoadError).
 - **Hardening**: Refuerzo de configuración de build para entornos Hostinger/VPS.
 
+## [0.1.13] - 2025-12-17
+
+### Corregido
+- **Despliegue**: Eliminado `prisma db push` del script `start` para evitar bloqueos durante el arranque de la aplicación.
+- **Estabilidad**: Rollback a versión estable 0.1.12 eliminando cambios experimentales que causaban errores.
+
 ## [0.1.12] - 2025-12-16
 
 ### Corregido

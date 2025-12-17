@@ -1,13 +1,11 @@
 {
   "name": "sat",
-  "version": "0.1.14",
+  "version": "0.1.13",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "postinstall": "prisma generate",
-    "deploy:setup": "prisma db push",
     "lint": "next lint"
   },
   "engines": {
