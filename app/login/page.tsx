@@ -16,11 +16,8 @@ export default function LoginPage() {
     const [error, setError] = useState<string | null>(null)
     const [isSignUp, setIsSignUp] = useState(false)
 
-    // Initializing client with hardcoded keys for stability
-    const supabase = createClientComponentClient({
-        supabaseUrl: 'https://adhvtuqtfpdrinyfmoll.supabase.co',
-        supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkaHZ0dXF0ZnBkcmlueWZtb2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNTc3NTcsImV4cCI6MjA4MTgzMzc1N30.dotYR5drO6huQed-iXjrwShjCunV0YQGISIVV9AKB0E'
-    })
+    // Initializing client using env vars baked in next.config.js
+    const supabase = createClientComponentClient()
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()

@@ -3,17 +3,10 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
-    // Hardcoded keys for stability
-    const supabaseUrl = 'https://adhvtuqtfpdrinyfmoll.supabase.co'
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkaHZ0dXF0ZnBkcmlueWZtb2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNTc3NTcsImV4cCI6MjA4MTgzMzc1N30.dotYR5drO6huQed-iXjrwShjCunV0YQGISIVV9AKB0E'
-
     const res = NextResponse.next()
 
     try {
-        const supabase = createMiddlewareClient({ req, res }, {
-            supabaseUrl,
-            supabaseKey: supabaseAnonKey
-        })
+        const supabase = createMiddlewareClient({ req, res })
         const { data: { session } } = await supabase.auth.getSession()
 
         // Protected routes logic
