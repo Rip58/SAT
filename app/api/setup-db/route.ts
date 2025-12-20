@@ -9,9 +9,9 @@ export async function GET() {
     try {
         console.log('🔄 Starting database setup...')
 
-        // Use npx prisma db push to sync schema with database
+        // Use local prisma binary instead of npx
         // We use --accept-data-loss since it's a new/empty DB usually
-        const { stdout, stderr } = await execAsync('npx prisma db push --accept-data-loss --skip-generate')
+        const { stdout, stderr } = await execAsync('./node_modules/.bin/prisma db push --accept-data-loss --skip-generate')
 
         console.log('✅ Database setup completed')
         console.log('stdout:', stdout)
