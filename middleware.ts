@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server'
 export async function middleware(req: NextRequest) {
     // Hardcoded keys for stability
     const supabaseUrl = 'https://adhvtuqtfpdrinyfmoll.supabase.co'
-    const supabaseAnonKey = 'sb_publishable_e6tCGLg_GR6RmZzn6Z5nUg_l1m8OODq'
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkaHZ0dXF0ZnBkcmlueWZtb2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNTc3NTcsImV4cCI6MjA4MTgzMzc1N30.dotYR5drO6huQed-iXjrwShjCunV0YQGISIVV9AKB0E'
 
     const res = NextResponse.next()
 
