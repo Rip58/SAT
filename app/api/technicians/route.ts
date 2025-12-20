@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { localDb } from '@/lib/local-db'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 // Basic schema for validation
@@ -10,13 +10,16 @@ const technicianSchema = z.object({
 // GET /api/technicians - List all technicians
 export async function GET() {
     try {
-        const technicians = await localDb.getTechnicians()
-        // Filter active only if needed, but localDb.getTechnicians returns all?
-        // localDb returns the array. Prisma filtered by isActive: true.
-        // Let's filter here too.
-        const activeTechnicians = technicians.filter(t => t.isActive !== false)
+        const technicians = await prisma.technician.findMany({
+            where: {
+                isActive: true
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        })
 
-        return NextResponse.json(activeTechnicians)
+        return NextResponse.json(technicians)
     } catch (error) {
         console.error('Error fetching technicians:', error)
         return NextResponse.json(
@@ -32,7 +35,11 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         const validated = technicianSchema.parse(body)
 
-        const newTechnician = await localDb.createTechnician(validated.name)
+        const newTechnician = await prisma.technician.create({
+            data: {
+                name: validated.name
+            }
+        })
 
         return NextResponse.json(newTechnician, { status: 201 })
     } catch (error: any) {
@@ -63,7 +70,9 @@ export async function DELETE(request: NextRequest) {
             )
         }
 
-        await localDb.deleteTechnician(id)
+        await prisma.technician.delete({
+            where: { id }
+        })
 
         return NextResponse.json({ success: true })
     } catch (error) {
