@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
@@ -16,20 +16,30 @@ export default function LoginPage() {
     const [error, setError] = useState<string | null>(null)
     const [isSignUp, setIsSignUp] = useState(false)
 
+    // Initializing client with hardcoded keys for stability
+    const supabase = createClientComponentClient({
+        supabaseUrl: 'https://adhvtuqtfpdrinyfmoll.supabase.co',
+        supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkaHZ0dXF0ZnBkcmlueWZtb2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNTc3NTcsImV4cCI6MjA4MTgzMzc1N30.dotYR5drO6huQed-iXjrwShjCunV0YQGISIVV9AKB0E'
+    })
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError(null)
 
         try {
-            const authFunction = isSignUp
-                ? supabase.auth.signUp
-                : supabase.auth.signInWithPassword
-
-            const { data, error } = await authFunction({
-                email,
-                password,
-            })
+            const { data, error } = isSignUp
+                ? await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        emailRedirectTo: `${location.origin}/auth/callback`,
+                    },
+                })
+                : await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                })
 
             if (error) throw error
 
