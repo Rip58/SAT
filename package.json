@@ -27,7 +27,11 @@
     "zod": "^3.23.0",
     "prisma": "^5.20.0",
     "@supabase/supabase-js": "^2.39.0",
-    "@supabase/auth-helpers-nextjs": "^0.8.0"
+    "@supabase/auth-helpers-nextjs": "^0.8.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.3.0",
+    "@radix-ui/react-slot": "^1.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",
