@@ -16,10 +16,11 @@ export async function initializeDatabase() {
 
     console.log('🔍 Checking database connection and initializing schema...')
 
-    if (!process.env.DATABASE_URL) {
-        console.warn('⚠️  DATABASE_URL not configured')
-        return false
-    }
+    // Hardcoded credentials being used, skipping env check
+    // if (!process.env.DATABASE_URL) {
+    //     console.warn('⚠️  DATABASE_URL not configured')
+    //     return false
+    // }
 
     try {
         console.log('🔧 Synchronizing database schema using SQL...')

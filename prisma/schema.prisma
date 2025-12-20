@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://u638857390_sat:lhFegWjl%401@localhost:3306/u638857390_sat"
 }
 
 model Repair {
