@@ -7,10 +7,14 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    console.log('📄 PDF generation requested for ID:', params.id)
+
     const repair = await prisma.repair.findUnique({
       where: { id: params.id },
       include: { assignedTechnician: true }
     })
+
+    console.log('📄 Repair found:', repair ? 'YES' : 'NO')
 
     const settings = await prisma.settings.findUnique({
       where: { id: 'settings' }
@@ -28,7 +32,10 @@ Equipos no retirados: Los equipos que no sean retirados en un plazo de 90 días 
 Datos personales: Toda la información contenida en los dispositivos será tratada con confidencialidad. No accedemos deliberadamente a archivos personales salvo autorización expresa del cliente y solo cuando sea necesario para el diagnóstico o solución del problema.`
     }
 
+    console.log('📄 Settings found:', settings ? 'YES' : 'NO')
+
     if (!repair) {
+      console.log('❌ Repair not found for ID:', params.id)
       return NextResponse.json(
         { error: 'Reparación no encontrada' },
         { status: 404 }
@@ -270,13 +277,20 @@ Datos personales: Toda la información contenida en los dispositivos será trata
 </html>
     `
 
+    console.log('✅ PDF HTML generated successfully')
+
     return new NextResponse(html, {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
       },
     })
   } catch (error) {
-    console.error('Error generating PDF:', error)
+    console.error('❌ Error generating PDF:', error)
+    console.error('❌ Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      params: params
+    })
     return NextResponse.json(
       { error: 'Error al generar el PDF' },
       { status: 500 }

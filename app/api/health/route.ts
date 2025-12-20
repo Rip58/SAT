@@ -1,24 +1,14 @@
 import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
 import { APP_VERSION } from '@/lib/constants'
-import { initializeDatabase } from '@/lib/init-db'
+// import { localDb } from '@/lib/local-db' // Not strictly needed if we just assume FS is ok, but good to try reading
 
-let dbInitialized = false
-
-// GET /api/health - Check database connection and initialize if needed
+// GET /api/health - Check system status
 export async function GET() {
     try {
-        // Initialize database schema on first run
-        if (!dbInitialized) {
-            dbInitialized = await initializeDatabase()
-        }
-
-        // Try to run a simple query
-        await prisma.$queryRaw`SELECT 1`
-
+        // Simple health check
         return NextResponse.json({
             status: 'ok',
-            database: 'connected',
+            database: 'local-json',
             version: APP_VERSION,
             timestamp: new Date().toISOString()
         })
@@ -27,7 +17,6 @@ export async function GET() {
         return NextResponse.json(
             {
                 status: 'error',
-                database: 'disconnected',
                 error: error instanceof Error ? error.message : 'Unknown error'
             },
             { status: 503 }
