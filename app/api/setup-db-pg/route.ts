@@ -85,11 +85,17 @@ export async function GET() {
         // Checking constraint existence is verbose in raw SQL, skipping to avoid complexity. 
         // Tables are the priority.
 
-        console.log('✅ PostgreSQL schema created successfully')
+        // 6. Disable RLS (Row Level Security) for simplicity
+        // This ensures the application can read/write without complex policies
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Technician" DISABLE ROW LEVEL SECURITY;`)
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Repair" DISABLE ROW LEVEL SECURITY;`)
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Settings" DISABLE ROW LEVEL SECURITY;`)
+
+        console.log('✅ PostgreSQL schema created and RLS disabled successfully')
 
         return NextResponse.json({
             status: 'success',
-            message: 'Database initialized successfully (PostgreSQL)',
+            message: 'Database initialized and permissions fixed (RLS Disabled)',
             tables: ['Technician', 'Repair', 'Settings']
         })
     } catch (error: any) {
