@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import path from 'path'
 
 const execAsync = promisify(exec)
 
@@ -8,10 +9,21 @@ const execAsync = promisify(exec)
 export async function GET() {
     try {
         console.log('🔄 Starting database setup...')
+        console.log('📁 Working directory:', process.cwd())
 
-        // Use local prisma binary instead of npx
-        // We use --accept-data-loss since it's a new/empty DB usually
-        const { stdout, stderr } = await execAsync('./node_modules/.bin/prisma db push --accept-data-loss --skip-generate')
+        // Build absolute path to prisma binary
+        const prismaBinary = path.join(process.cwd(), 'node_modules', '.bin', 'prisma')
+        console.log('🔍 Prisma binary path:', prismaBinary)
+
+        // Try with absolute path first
+        const command = `"${prismaBinary}" db push --accept-data-loss --skip-generate`
+
+        console.log('⚡ Executing command:', command)
+
+        const { stdout, stderr } = await execAsync(command, {
+            cwd: process.cwd(),
+            env: { ...process.env }
+        })
 
         console.log('✅ Database setup completed')
         console.log('stdout:', stdout)
@@ -22,7 +34,9 @@ export async function GET() {
             message: 'Database initialized successfully',
             details: {
                 stdout,
-                stderr
+                stderr,
+                workingDir: process.cwd(),
+                binaryPath: prismaBinary
             }
         })
     } catch (error: any) {
@@ -32,7 +46,8 @@ export async function GET() {
                 status: 'error',
                 message: 'Failed to initialize database',
                 error: error.message,
-                details: error.stderr || error.stdout
+                details: error.stderr || error.stdout,
+                workingDir: process.cwd()
             },
             { status: 500 }
         )
