@@ -90,11 +90,9 @@ export default function NewRepairPage() {
 
             const repair = await response.json()
 
-            // Open PDF in new window
-            window.open(`/api/repairs/${repair.id}/pdf`, '_blank')
-
-            // Redirect to repairs list
-            router.push('/reparaciones')
+            // Refresh router cache and redirect to dashboard
+            router.refresh()
+            router.push('/')
         } catch (error: any) {
             console.error('Error creating repair:', error)
             alert(error.message || 'Error al crear la reparación')
