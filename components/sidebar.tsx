@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LayoutDashboard, FileText, List, Settings, Wrench } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { LayoutDashboard, FileText, List, Settings, Wrench, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/constants'
 import { useEffect, useState } from 'react'
@@ -17,6 +17,7 @@ const navigation = [
 
 export default function Sidebar() {
     const pathname = usePathname()
+    const router = useRouter()
     const [dbConnected, setDbConnected] = useState<boolean | null>(null)
     const [mounted, setMounted] = useState(false)
     const [userEmail, setUserEmail] = useState<string>('')
@@ -29,6 +30,17 @@ export default function Sidebar() {
         const interval = setInterval(checkHealth, 30000)
         return () => clearInterval(interval)
     }, [])
+
+    const handleLogout = async () => {
+        try {
+            const supabase = createClientComponentClient()
+            await supabase.auth.signOut()
+            router.push('/login')
+            router.refresh()
+        } catch (error) {
+            console.error('Error logging out:', error)
+        }
+    }
 
     const fetchUserEmail = async () => {
         try {
@@ -101,10 +113,17 @@ export default function Sidebar() {
             {/* Footer */}
             <div className="border-t border-border p-4">
                 {userEmail && (
-                    <div className="mb-3 pb-3 border-b border-border">
-                        <p className="text-xs text-muted-foreground truncate" title={userEmail}>
+                    <div className="mb-3 pb-3 border-b border-border flex items-center justify-between gap-2">
+                        <p className="text-xs text-muted-foreground truncate flex-1" title={userEmail}>
                             {userEmail}
                         </p>
+                        <button
+                            onClick={handleLogout}
+                            className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
+                            title="Cerrar sesión"
+                        >
+                            <LogOut className="h-4 w-4" />
+                        </button>
                     </div>
                 )}
                 <div className="flex items-center gap-2 mb-2">
