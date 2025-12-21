@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { FileText, Clock, Loader2, CheckCircle2, Package, Trash2 } from 'lucide-react'
+import { FileText, Clock, Loader2, CheckCircle2, Package, Trash2, Edit } from 'lucide-react'
 import StatCard from '@/components/stat-card'
 import StatusBadge from '@/components/status-badge'
 import PinModal from '@/components/pin-modal'
@@ -215,7 +215,7 @@ export default function Dashboard() {
                                             className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
                                             title="Editar"
                                         >
-                                            <FileText className="h-4 w-4" />
+                                            <Edit className="h-4 w-4" />
                                         </Link>
                                         <button
                                             onClick={() => handleDeleteClick(repair.id)}
