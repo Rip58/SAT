@@ -1,34 +1,50 @@
-import { NextResponse } from 'next/server'
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/stats/monthly - Get repairs grouped by month
-export async function GET() {
+// GET /api/stats/monthly?year=2025 - Get repairs by month for specific year
+export async function GET(request: NextRequest) {
     try {
+        const { searchParams } = new URL(request.url)
+        const year = parseInt(searchParams.get('year') || new Date().getFullYear().toString())
+
         const repairs = await prisma.repair.findMany({
             select: {
                 entryDate: true
+            },
+            where: {
+                entryDate: {
+                    gte: new Date(`${ year }-01-01`),
+                    lt: new Date(`${ year + 1 }-01-01`)
+                }
             }
         })
 
-        // Group repairs by month
-        const monthlyStats: Record<string, number> = {}
+        // Initialize all 12 months with 0
+        const monthNames = [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ]
+        
+        const monthlyStats = monthNames.map((name, index) => ({
+            month: index + 1,
+            monthKey: `${ year } -${ String(index + 1).padStart(2, '0') } `,
+            label: name,
+            count: 0
+        }))
 
+        // Count repairs for each month
         repairs.forEach(repair => {
             const date = new Date(repair.entryDate)
-            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-            monthlyStats[monthKey] = (monthlyStats[monthKey] || 0) + 1
+            const monthIndex = date.getMonth()
+            monthlyStats[monthIndex].count++
         })
 
-        // Convert to array and sort by date
-        const result = Object.entries(monthlyStats)
-            .map(([month, count]) => ({
-                month,
-                count,
-                label: new Date(month + '-01').toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })
-            }))
-            .sort((a, b) => a.month.localeCompare(b.month))
-
-        return NextResponse.json(result)
+        return NextResponse.json({
+            year,
+            months: monthlyStats,
+            total: repairs.length
+        })
     } catch (error) {
         console.error('Error fetching monthly stats:', error)
         return NextResponse.json(
