@@ -1,27 +1,27 @@
-import type { Metadata } from "next";
+'use client'
+
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 const Sidebar = dynamic(() => import('@/components/sidebar'), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: "Gestor de SAT - Sistema de Reparaciones",
-    description: "Sistema de gestión de servicio técnico para reparaciones de ordenadores y portátiles",
-};
-
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const pathname = usePathname();
+    const isLoginPage = pathname === '/login';
+
     return (
         <html lang="es">
             <body className={inter.className}>
                 <div className="flex h-screen overflow-hidden">
-                    <Sidebar />
+                    {!isLoginPage && <Sidebar />}
                     <main className="flex-1 overflow-y-auto">
                         {children}
                     </main>
@@ -30,3 +30,4 @@ export default function RootLayout({
         </html>
     );
 }
+
