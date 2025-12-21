@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, FileText, Trash2 } from 'lucide-react'
+import { Search, FileText, Trash2, Edit } from 'lucide-react'
 import StatusBadge from '@/components/status-badge'
 import { formatDate } from '@/lib/utils'
 
@@ -195,6 +195,13 @@ export default function RepairsListPage() {
                                                 >
                                                     <FileText className="h-4 w-4" />
                                                 </button>
+                                                <Link
+                                                    href={`/reparaciones/${repair.id}`}
+                                                    className="button-ghost p-2 inline-flex items-center"
+                                                    title="Editar"
+                                                >
+                                                    <Edit className="h-4 w-4" />
+                                                </Link>
                                                 <button
                                                     onClick={() => handleDelete(repair.id)}
                                                     className="button-ghost p-2 text-destructive hover:bg-destructive/10"
