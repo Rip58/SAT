@@ -1,4 +1,3 @@
-```typescript
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
@@ -14,8 +13,8 @@ export async function GET(request: NextRequest) {
             },
             where: {
                 entryDate: {
-                    gte: new Date(`${ year }-01-01`),
-                    lt: new Date(`${ year + 1 }-01-01`)
+                    gte: new Date(`${year}-01-01`),
+                    lt: new Date(`${year + 1}-01-01`)
                 }
             }
         })
@@ -25,10 +24,10 @@ export async function GET(request: NextRequest) {
             'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
             'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
         ]
-        
+
         const monthlyStats = monthNames.map((name, index) => ({
             month: index + 1,
-            monthKey: `${ year } -${ String(index + 1).padStart(2, '0') } `,
+            monthKey: `${year}-${String(index + 1).padStart(2, '0')}`,
             label: name,
             count: 0
         }))
