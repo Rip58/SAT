@@ -6,6 +6,7 @@ import { LayoutDashboard, FileText, List, Settings, Wrench } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/constants'
 import { useEffect, useState } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 const navigation = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -16,17 +17,30 @@ const navigation = [
 
 export default function Sidebar() {
     const pathname = usePathname()
-    // Add state for DB health
     const [dbConnected, setDbConnected] = useState<boolean | null>(null)
     const [mounted, setMounted] = useState(false)
+    const [userEmail, setUserEmail] = useState<string>('')
 
     useEffect(() => {
         setMounted(true)
         checkHealth()
+        fetchUserEmail()
         // Poll every 30 seconds
         const interval = setInterval(checkHealth, 30000)
         return () => clearInterval(interval)
     }, [])
+
+    const fetchUserEmail = async () => {
+        try {
+            const supabase = createClientComponentClient()
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user?.email) {
+                setUserEmail(user.email)
+            }
+        } catch (error) {
+            console.error('Error fetching user:', error)
+        }
+    }
 
     const checkHealth = async () => {
         try {
@@ -42,7 +56,6 @@ export default function Sidebar() {
         }
     }
 
-    // Determine status color/shadow
     const statusColor = dbConnected === null ? 'bg-gray-400' :
         dbConnected ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' :
             'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]'
@@ -87,6 +100,13 @@ export default function Sidebar() {
 
             {/* Footer */}
             <div className="border-t border-border p-4">
+                {userEmail && (
+                    <div className="mb-3 pb-3 border-b border-border">
+                        <p className="text-xs text-muted-foreground truncate" title={userEmail}>
+                            {userEmail}
+                        </p>
+                    </div>
+                )}
                 <div className="flex items-center gap-2 mb-2">
                     <div className={cn("h-2 w-2 rounded-full transition-all", statusColor)} />
                     <span className="text-xs font-medium text-muted-foreground">
