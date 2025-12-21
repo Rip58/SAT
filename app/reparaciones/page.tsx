@@ -29,6 +29,7 @@ export default function RepairsListPage() {
 
     useEffect(() => {
         fetchRepairs()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [statusFilter])
 
     const fetchRepairs = async () => {
