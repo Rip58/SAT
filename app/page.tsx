@@ -41,6 +41,17 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchData()
+
+        // Auto-refresh when page becomes visible (e.g., after navigating back)
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                console.log('🔄 Page visible, refreshing dashboard...')
+                fetchData()
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
     }, [])
 
     useEffect(() => {
