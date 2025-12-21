@@ -48,11 +48,12 @@ export default function LoginPage() {
                 }
             }
 
+            // Redirect on success
+            console.log('Login successful, redirecting...')
             router.push('/')
             router.refresh()
         } catch (error: any) {
             setError(error.message || 'Error de autenticación')
-        } finally {
             setLoading(false)
         }
     }

@@ -5,24 +5,26 @@ import type { NextRequest } from 'next/server'
 export async function middleware(req: NextRequest) {
     const res = NextResponse.next()
 
+    let session = null
     try {
         const supabase = createMiddlewareClient({ req, res })
-        const { data: { session } } = await supabase.auth.getSession()
-
-        // Protected routes logic
-        if (!session && req.nextUrl.pathname !== '/login') {
-            return NextResponse.redirect(new URL('/login', req.url))
-        }
-
-        if (session && req.nextUrl.pathname === '/login') {
-            return NextResponse.redirect(new URL('/', req.url))
-        }
+        const { data } = await supabase.auth.getSession()
+        session = data.session
     } catch (e) {
-        // If middleware fails, allow temporary access or redirect to login
         console.error('Middleware auth check failed', e)
-        if (req.nextUrl.pathname !== '/login') {
-            return NextResponse.redirect(new URL('/login', req.url))
-        }
+    }
+
+    // Protected routes logic
+    if (!session && req.nextUrl.pathname !== '/login') {
+        const url = req.nextUrl.clone()
+        url.pathname = '/login'
+        return NextResponse.redirect(url)
+    }
+
+    if (session && req.nextUrl.pathname === '/login') {
+        const url = req.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)
     }
 
     return res
@@ -33,11 +35,11 @@ export const config = {
         /*
          * Match all request paths except for the ones starting with:
          * - api/health (health check)
-         * - api/setup (setup routes)
+         * - api/setup-db-pg (setup route)
          * - _next/static (static files)
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          */
-        '/((?!api/health|api/setup|_next/static|_next/image|favicon.ico).*)',
+        '/((?!api/health|api/setup-db-pg|_next/static|_next/image|favicon.ico).*)',
     ],
 }
