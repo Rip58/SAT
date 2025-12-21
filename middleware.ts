@@ -4,27 +4,33 @@ import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
     const res = NextResponse.next()
+    const isLoginPage = req.nextUrl.pathname === '/login'
 
     let session = null
     try {
         const supabase = createMiddlewareClient({ req, res })
         const { data } = await supabase.auth.getSession()
         session = data.session
+
+        console.log('[Middleware]', {
+            path: req.nextUrl.pathname,
+            hasSession: !!session,
+            userEmail: session?.user?.email
+        })
     } catch (e) {
-        console.error('Middleware auth check failed', e)
+        console.error('[Middleware] Auth check failed:', e)
     }
 
-    // Protected routes logic
-    if (!session && req.nextUrl.pathname !== '/login') {
-        const url = req.nextUrl.clone()
-        url.pathname = '/login'
-        return NextResponse.redirect(url)
+    // If no session and trying to access protected route, redirect to login
+    if (!session && !isLoginPage) {
+        console.log('[Middleware] No session, redirecting to /login')
+        return NextResponse.redirect(new URL('/login', req.url))
     }
 
-    if (session && req.nextUrl.pathname === '/login') {
-        const url = req.nextUrl.clone()
-        url.pathname = '/'
-        return NextResponse.redirect(url)
+    // If has session and trying to access login, redirect to dashboard
+    if (session && isLoginPage) {
+        console.log('[Middleware] Has session, redirecting to /')
+        return NextResponse.redirect(new URL('/', req.url))
     }
 
     return res
@@ -33,13 +39,12 @@ export async function middleware(req: NextRequest) {
 export const config = {
     matcher: [
         /*
-         * Match all request paths except for the ones starting with:
-         * - api/health (health check)
-         * - api/setup-db-pg (setup route)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
+         * Match all request paths except:
+         * - /api/* (all API routes)
+         * - /_next/static (static files)
+         * - /_next/image (image optimization)
+         * - /favicon.ico
          */
-        '/((?!api/health|api/setup-db-pg|_next/static|_next/image|favicon.ico).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico).*)',
     ],
 }
