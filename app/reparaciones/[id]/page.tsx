@@ -111,7 +111,8 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                 throw new Error(error.error || 'Error al actualizar la reparación')
             }
 
-            // Redirect to repairs list or dashboard
+            // Refresh router cache and redirect to dashboard
+            router.refresh()
             router.push('/')
         } catch (error: any) {
             console.error('Error updating repair:', error)
