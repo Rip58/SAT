@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, FileText, List, Settings, Wrench, LogOut } from 'lucide-react'
+import { LayoutDashboard, FileText, List, Settings, Wrench, LogOut, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/constants'
 import { useEffect, useState } from 'react'
@@ -12,6 +12,7 @@ const navigation = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
     { name: 'Nueva Reparación', href: '/nueva-reparacion', icon: FileText },
     { name: 'Listado de Reparaciones', href: '/reparaciones', icon: List },
+    { name: 'Estadísticas', href: '/estadisticas', icon: BarChart3 },
     { name: 'Ajustes', href: '/ajustes', icon: Settings },
 ]
 
