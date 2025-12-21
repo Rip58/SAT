@@ -15,7 +15,11 @@ const navigation = [
     { name: 'Ajustes', href: '/ajustes', icon: Settings },
 ]
 
-export default function Sidebar() {
+interface SidebarProps {
+    onNavigate?: () => void
+}
+
+export default function Sidebar({ onNavigate }: SidebarProps = {}) {
     const pathname = usePathname()
     const router = useRouter()
     const [dbConnected, setDbConnected] = useState<boolean | null>(null)
@@ -96,6 +100,7 @@ export default function Sidebar() {
                         <Link
                             key={item.name}
                             href={item.href}
+                            onClick={() => onNavigate?.()}
                             className={cn(
                                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                                 isActive
