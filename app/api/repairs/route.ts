@@ -4,6 +4,7 @@ import { repairSchema } from '@/lib/validations'
 import { generateOperationNumber } from '@/lib/utils'
 
 // GET /api/repairs - List all repairs with optional status filter
+export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
     try {
         console.log('🔧 Repairs API called')

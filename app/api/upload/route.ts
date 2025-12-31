@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
             const filename = `${uniqueSuffix}-${file.name.replace(/\s+/g, '-')}`
 
             // Remove quotes if present in bucket name env var (common issue)
-            const bucketName = (process.env.SUPABASE_BUCKET_NAME || 'SAT').replace(/['"]/g, '')
+            const bucketName = (process.env.SUPABASE_BUCKET_NAME || 'sat').replace(/['"]/g, '')
 
             try {
                 await s3Client.send(new PutObjectCommand({

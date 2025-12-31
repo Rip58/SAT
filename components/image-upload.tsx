@@ -56,7 +56,8 @@ export default function ImageUpload({ onUpload, existingUrls = [] }: ImageUpload
             onUpload(newUrls)
         } catch (error) {
             console.error('Error uploading images:', error)
-            alert('Error al subir las imágenes. Asegúrate de que no superen los 10MB.')
+            const errorMessage = error instanceof Error ? error.message : 'Error desconocido'
+            alert(`Error al subir las imágenes: ${errorMessage}`)
         } finally {
             setUploading(false)
             if (fileInputRef.current) {

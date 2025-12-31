@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         const key = `${uniqueSuffix}-${cleanFilename}`
 
         // Get bucket name, handling quotes if they exist in env
-        const bucketName = (process.env.SUPABASE_BUCKET_NAME || 'SAT').replace(/['"]/g, '')
+        const bucketName = (process.env.SUPABASE_BUCKET_NAME || 'sat').replace(/['"]/g, '')
 
         const command = new PutObjectCommand({
             Bucket: bucketName,
