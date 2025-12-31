@@ -14,9 +14,10 @@ export default function StatCard({
     subtitle,
     icon: Icon,
     iconColor = 'text-primary',
-}: StatCardProps) {
+    className
+}: StatCardProps & { className?: string }) {
     return (
-        <div className="rounded-lg border border-border bg-secondary p-6 h-full flex flex-col justify-between">
+        <div className={`rounded-lg border border-border p-6 h-full flex flex-col justify-between ${className || 'bg-secondary'}`}>
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-sm font-medium text-muted-foreground">{title}</p>
