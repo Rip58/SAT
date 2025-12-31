@@ -22,18 +22,32 @@ export default function ImageUpload({ onUpload, existingUrls = [] }: ImageUpload
 
         try {
             const uploadPromises = Array.from(files).map(async (file) => {
-                const formData = new FormData()
-                formData.append('file', file)
-
-                const response = await fetch('/api/upload', {
+                // 1. Get Presigned URL
+                const presignResponse = await fetch('/api/upload/presigned', {
                     method: 'POST',
-                    body: formData,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        contentType: file.type
+                    })
                 })
 
-                if (!response.ok) throw new Error('Upload failed')
+                if (!presignResponse.ok) throw new Error('Failed to get upload URL')
+                const { uploadUrl, publicUrl } = await presignResponse.json()
 
-                const data = await response.json()
-                return data.url
+                // 2. Upload directly to S3
+                const uploadResponse = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    body: file,
+                    headers: {
+                        'Content-Type': file.type,
+                        'x-amz-acl': 'public-read' // Just in case, though handled in presign
+                    }
+                })
+
+                if (!uploadResponse.ok) throw new Error('Failed to upload to storage')
+
+                return publicUrl
             })
 
             const urls = await Promise.all(uploadPromises)
@@ -42,7 +56,7 @@ export default function ImageUpload({ onUpload, existingUrls = [] }: ImageUpload
             onUpload(newUrls)
         } catch (error) {
             console.error('Error uploading images:', error)
-            alert('Error al subir las imágenes')
+            alert('Error al subir las imágenes. Asegúrate de que no superen los 10MB.')
         } finally {
             setUploading(false)
             if (fileInputRef.current) {
