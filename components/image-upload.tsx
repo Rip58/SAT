@@ -32,7 +32,10 @@ export default function ImageUpload({ onUpload, existingUrls = [] }: ImageUpload
                     })
                 })
 
-                if (!presignResponse.ok) throw new Error('Failed to get upload URL')
+                if (!presignResponse.ok) {
+                    const errorData = await presignResponse.json()
+                    throw new Error(errorData.error || 'Failed to get upload URL')
+                }
                 const { uploadUrl, publicUrl } = await presignResponse.json()
 
                 // 2. Upload directly to S3

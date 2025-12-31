@@ -17,7 +17,11 @@ const s3Client = process.env.SUPABASE_ACCESS_KEY_ID && process.env.SUPABASE_ENDP
 export async function POST(request: NextRequest) {
     try {
         if (!s3Client) {
-            return NextResponse.json({ error: 'S3 Client not configured' }, { status: 500 })
+            console.error('❌ S3 Client config missing:', {
+                hasAccessKey: !!process.env.SUPABASE_ACCESS_KEY_ID,
+                hasEndpoint: !!process.env.SUPABASE_ENDPOINT
+            })
+            return NextResponse.json({ error: 'S3 Client not configured (Check server logs)' }, { status: 500 })
         }
 
         const body = await request.json()
@@ -30,6 +34,8 @@ export async function POST(request: NextRequest) {
 
         // Get bucket name, handling quotes if they exist in env
         const bucketName = (process.env.SUPABASE_BUCKET_NAME || 'sat').replace(/['"]/g, '')
+
+        console.log('📝 Generating presigned URL for:', { bucketName, key, contentType })
 
         const command = new PutObjectCommand({
             Bucket: bucketName,
@@ -48,8 +54,10 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ uploadUrl, publicUrl })
 
-    } catch (error) {
-        console.error('Error generating presigned URL:', error)
-        return NextResponse.json({ error: 'Failed to generate upload URL' }, { status: 500 })
+    } catch (error: any) {
+        console.error('❌ Error generating presigned URL:', error)
+        return NextResponse.json({
+            error: `Failed to generate upload URL: ${error.message}`
+        }, { status: 500 })
     }
 }
