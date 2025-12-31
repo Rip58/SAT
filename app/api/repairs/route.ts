@@ -91,6 +91,7 @@ export async function POST(request: NextRequest) {
                 issueDescription: validatedData.issueDescription || null,
                 technicalDiagnosis: validatedData.technicalDiagnosis || null,
                 repairResult: validatedData.repairResult || null,
+                visualEvidence: validatedData.visualEvidence || null,
                 status: validatedData.status as any, // Cast to enum
                 entryDate: validatedData.entryDate ? new Date(validatedData.entryDate) : new Date(),
                 exitDate: validatedData.exitDate ? new Date(validatedData.exitDate) : null,

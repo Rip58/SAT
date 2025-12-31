@@ -15,6 +15,7 @@ export const repairSchema = z.object({
     issueDescription: z.string().optional(),
     technicalDiagnosis: z.string().optional(),
     repairResult: z.string().optional(),
+    visualEvidence: z.string().optional(),
     status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']).default('PENDING'),
     entryDate: z.string().optional(),
     exitDate: z.string().optional().nullable(),

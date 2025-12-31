@@ -231,10 +231,17 @@ Datos personales: Toda la información contenida en los dispositivos será trata
     <div class="info-row"><span class="label">Nº Factura:</span> ${repair.invoiceNumber || 'No'}</div>
   </div>
   
-  <div class="section">
+    <div class="section">
     <h3>Motivo de la Intervención</h3>
     <div class="description">
       ${repair.issueDescription || 'No especificado'}
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Evidencias Visuales</h3>
+    <div class="description">
+      ${repair.visualEvidence || 'No hay evidencias registradas'}
     </div>
   </div>
   

@@ -37,11 +37,13 @@ model Repair {
   
   // Repair Details
   invoiceNumber   String?
+  // Details
   issueDescription String? @db.Text // Customer's problem report
   technicalDiagnosis String? @db.Text // Technical assessment
   repairResult    String? @db.Text // Final result
+  visualEvidence  String? @db.Text // Visual evidence description
   
-  // Images
+  // Images (Deprecated/Legacy)
   imageUrls       Json     @default("[]") // Array of Vercel Blob URLs
   
   // Metadata

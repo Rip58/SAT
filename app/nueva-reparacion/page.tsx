@@ -37,6 +37,7 @@ export default function NewRepairPage() {
         entryDate: new Date().toISOString().split('T')[0],
         exitDate: '',
         imageUrls: [] as string[],
+        visualEvidence: '',
     })
 
     useEffect(() => {
@@ -329,12 +330,15 @@ export default function NewRepairPage() {
                         </div>
                     </div>
 
-                    {/* Images Card */}
+                    {/* Visual Evidence Card */}
                     <div className="rounded-lg border border-border bg-secondary p-6">
                         <h2 className="font-semibold mb-4">Evidencias Visuales</h2>
-                        <ImageUpload
-                            onUpload={(urls) => setFormData({ ...formData, imageUrls: urls })}
-                            existingUrls={formData.imageUrls}
+                        <textarea
+                            value={formData.visualEvidence}
+                            onChange={(e) => setFormData({ ...formData, visualEvidence: e.target.value })}
+                            className="textarea w-full bg-background"
+                            rows={3}
+                            placeholder="Describe el estado físico del equipo (arañazos, golpes, etc)..."
                         />
                     </div>
 

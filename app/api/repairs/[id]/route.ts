@@ -60,6 +60,7 @@ export async function PUT(
                 issueDescription: validatedData.issueDescription || null,
                 technicalDiagnosis: validatedData.technicalDiagnosis || null,
                 repairResult: validatedData.repairResult || null,
+                visualEvidence: validatedData.visualEvidence || null,
                 status: validatedData.status,
                 entryDate: validatedData.entryDate ? new Date(validatedData.entryDate) : undefined,
                 exitDate: validatedData.exitDate ? new Date(validatedData.exitDate) : null,

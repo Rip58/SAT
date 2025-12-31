@@ -38,6 +38,7 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
         entryDate: '',
         exitDate: '',
         imageUrls: [] as string[],
+        visualEvidence: '',
     })
 
     useEffect(() => {
@@ -70,6 +71,7 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                     entryDate: repairData.entryDate ? new Date(repairData.entryDate).toISOString().split('T')[0] : '',
                     exitDate: repairData.exitDate ? new Date(repairData.exitDate).toISOString().split('T')[0] : '',
                     imageUrls: repairData.imageUrls || [],
+                    visualEvidence: repairData.visualEvidence || '',
                 })
 
                 if (repairData.invoiceNumber === 'no') {
@@ -362,12 +364,15 @@ export default function EditRepairPage({ params }: { params: { id: string } }) {
                         </div>
                     </div>
 
-                    {/* Images Card */}
+                    {/* Visual Evidence Card */}
                     <div className="rounded-lg border border-border bg-secondary p-6">
                         <h2 className="font-semibold mb-4">Evidencias Visuales</h2>
-                        <ImageUpload
-                            onUpload={(urls) => setFormData({ ...formData, imageUrls: urls })}
-                            existingUrls={formData.imageUrls}
+                        <textarea
+                            value={formData.visualEvidence}
+                            onChange={(e) => setFormData({ ...formData, visualEvidence: e.target.value })}
+                            className="textarea w-full bg-background"
+                            rows={3}
+                            placeholder="Describe el estado físico del equipo (arañazos, golpes, etc)..."
                         />
                     </div>
 
