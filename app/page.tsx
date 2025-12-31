@@ -15,6 +15,7 @@ interface Stats {
     pending: number
     inProgress: number
     completed: number
+    cancelled: number
 }
 
 interface Repair {
@@ -29,7 +30,7 @@ interface Repair {
 }
 
 export default function Dashboard() {
-    const [stats, setStats] = useState<Stats>({ total: 0, pending: 0, inProgress: 0, completed: 0 })
+    const [stats, setStats] = useState<Stats>({ total: 0, pending: 0, inProgress: 0, completed: 0, cancelled: 0 })
     const [repairs, setRepairs] = useState<Repair[]>([])
     const [filteredRepairs, setFilteredRepairs] = useState<Repair[]>([])
     const [loading, setLoading] = useState(true)
@@ -145,13 +146,14 @@ export default function Dashboard() {
             </div>
 
             {/* Stats Grid - Clickable Filters */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">
                 <div onClick={() => setFilter('all')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'all' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Total Reparaciones"
                         value={stats?.total || 0}
                         subtitle="Reparaciones registradas"
                         icon={Package}
+                        className="bg-secondary"
                     />
                 </div>
                 <div onClick={() => setFilter('PENDING')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'PENDING' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
@@ -160,7 +162,8 @@ export default function Dashboard() {
                         value={stats?.pending || 0}
                         subtitle="Reparaciones pendientes"
                         icon={Clock}
-                        iconColor="text-gray-400"
+                        iconColor="text-gray-500"
+                        className="bg-gray-50 dark:bg-gray-900/40"
                     />
                 </div>
                 <div onClick={() => setFilter('IN_PROGRESS')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'IN_PROGRESS' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
@@ -169,7 +172,8 @@ export default function Dashboard() {
                         value={stats?.inProgress || 0}
                         subtitle="Reparaciones en curso"
                         icon={Loader2}
-                        iconColor="text-yellow-400"
+                        iconColor="text-orange-600"
+                        className="bg-orange-50 dark:bg-orange-900/20"
                     />
                 </div>
                 <div onClick={() => setFilter('COMPLETED')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'COMPLETED' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
@@ -178,7 +182,18 @@ export default function Dashboard() {
                         value={stats?.completed || 0}
                         subtitle="Reparaciones finalizadas"
                         icon={CheckCircle2}
-                        iconColor="text-blue-400"
+                        iconColor="text-emerald-600"
+                        className="bg-emerald-50 dark:bg-emerald-900/20"
+                    />
+                </div>
+                <div onClick={() => setFilter('CANCELLED')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'CANCELLED' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
+                    <StatCard
+                        title="Canceladas"
+                        value={stats?.cancelled || 0}
+                        subtitle="Reparaciones canceladas"
+                        icon={Trash2}
+                        iconColor="text-red-600"
+                        className="bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100"
                     />
                 </div>
             </div>
