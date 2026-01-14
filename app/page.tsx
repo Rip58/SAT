@@ -126,11 +126,11 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="p-8 pb-20">
-            <div className="mb-8 flex items-center justify-between">
-                <div>
+        <div className="p-4 pt-16 lg:p-8 pb-20">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="pl-12 lg:pl-0">
                     <div className="flex items-center gap-3">
-                        <h1 className="text-3xl font-bold">Dashboard</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
                         <span className="text-xs font-mono text-muted-foreground bg-accent px-2 py-0.5 rounded-full border border-border">
                             v{APP_VERSION}
                         </span>
@@ -139,14 +139,14 @@ export default function Dashboard() {
                         Última actualización: hace un momento
                     </p>
                 </div>
-                <Link href="/nueva-reparacion" className="button-primary flex items-center gap-2">
+                <Link href="/nueva-reparacion" className="button-primary flex items-center justify-center gap-2 w-full sm:w-auto">
                     <FileText className="h-4 w-4" />
                     Nueva Reparación
                 </Link>
             </div>
 
             {/* Stats Grid - Clickable Filters */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">
+            <div className="grid gap-4 grid-cols-2 lg:grid-cols-5 mb-8">
                 <div onClick={() => setFilter('all')} className={`cursor-pointer transition-transform hover:scale-105 h-full ${filter === 'all' ? 'ring-2 ring-primary rounded-xl' : ''}`}>
                     <StatCard
                         title="Total Reparaciones"
